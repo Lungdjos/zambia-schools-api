@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.database import SessionLocal
 from app.models import School, City, Province, Country
+from app.schemas import CountryCreate  # Import the CountryCreate Pydantic model
 
 router = APIRouter()
 
@@ -94,14 +95,30 @@ async def import_cities_from_excel(file_path: str):
 
 # add a country
 @router.post("/add-country")
-async def add_country(name: str, iso3: str, iso2: str, numeric_code: int, phone_code: int, capital: str, currency: str, currency_name: str, native_name: str, region: str, subregion: str, nationality: str):
-    db = SessionLocal()
-    new_country = Country(name=name, iso3=iso3, iso2=iso2, numeric_code=numeric_code, phone_code=phone_code, capital=capital, currency=currency, currency_name=currency_name, native_name=native_name, region=region, subregion=subregion, nationality=nationality)
-    db.add(new_country)
-    db.commit()
-    db.close()
-    return {"message": f"Country '{name}' added successfully"}
-
+async def add_country(country: CountryCreate):
+    try:
+        db = SessionLocal()
+        new_country = Country(
+            name=country.name,
+            iso3=country.iso3,
+            iso2=country.iso2,
+            numeric_code=country.numeric_code,
+            phone_code=country.phone_code,
+            capital=country.capital,
+            currency=country.currency,
+            currency_name=country.currency_name,
+            native_name=country.native_name,
+            region=country.region,
+            subregion=country.subregion,
+            nationality=country.nationality
+        )
+        db.add(new_country)
+        db.commit()
+        db.close()
+        return {"message": f"Country '{country.name}' added successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
 @router.post("/import-countries")
 async def import_countries_from_excel(file_path: str):
     try:

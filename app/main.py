@@ -4,7 +4,8 @@ from app.routes import router
 app = FastAPI(
     title="Zambia Schools API",
     description="API for managing primary and secondary schools in Zambia",
-    version="1.0.0"
+    version="1.0.0",
+    debug=True
 )
 
 app.include_router(router)

@@ -23,7 +23,7 @@ class Province(Base):
     __tablename__ = "provinces"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True)
-    country_id = Column(Integer, ForeignKey("countries.id"))
+    country_id = Column(Integer, ForeignKey("countries.id"))  # Correct foreign key
     country_code = Column(String)
     country_name = Column(String)
     state_code = Column(String)
@@ -32,12 +32,12 @@ class City(Base):
     __tablename__ = "cities"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    province_id = Column(Integer, ForeignKey("provinces.id"))
-    country_id = Column(Integer, ForeignKey("provinces.country.id"))
+    province_id = Column(Integer, ForeignKey("provinces.id"))  # Correct foreign key
+    country_id = Column(Integer, ForeignKey("countries.id"))  # Corrected foreign key
 
 class School(Base):
     __tablename__ = "schools"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    type = Column(String)  # primary, secondary or combined
-    city_id = Column(Integer, ForeignKey("cities.id"))
+    type = Column(String)  # primary, secondary, or combined
+    city_id = Column(Integer, ForeignKey("cities.id"))  # Correct foreign key
